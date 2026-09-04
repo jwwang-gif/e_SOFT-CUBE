@@ -2,7 +2,7 @@
 
 **e_SOFT CUBE** is a Fortran program that reconstructs high-resolution (10-m) urban wind and air-temperature fields from a precomputed CFD database and LDAPS meteorological profiles. It is the extended-domain implementation of SOFT CUBE: sixteen local CFD domains (`D01`–`D16`) are synthesized independently and joined into one seamless composite field across a 6 km × 6 km area.
 
-This repository provides the complete synthesis source code, configuration files, and **a minimal working sample/test dataset covering the lowest 10 vertical levels** to enable code verification and reproducible execution. To allow immediate reproduction of the manuscript findings, the sample dataset is configured for **22:00 UTC on 4 July 2021 (2021070422)**, which corresponds to the representative unstable convective case evaluated in Section 3.2 (Figs. 9–10) of the paper.
+This repository provides the synthesis source code, configuration files, and **a minimal working sample/test dataset covering the lowest 10 vertical levels** to enable code verification and reproducible execution. To allow immediate reproduction of the manuscript findings, the sample dataset is configured for **22:00 UTC on 4 July 2021 (2021070422)**, which corresponds to the representative unstable convective case evaluated in Section 3.2 (Figs. 9–10) of the paper.
 
 ## What this program does
 
