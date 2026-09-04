@@ -100,7 +100,7 @@ Run the program from the repository root and supply one target date-time in `YYY
 
 ```bash
 mkdir -p output
-./e_SOFTCUBE 2021070100
+./e_SOFTCUBE 2021070422
 ```
 
 The program validates the argument before opening input files. Progress is printed as each vertical level is processed.
@@ -142,7 +142,7 @@ Full Database Access: Due to storage, bandwidth, and security constraints, publi
 | Software | e_SOFT CUBE |
 | Full name | Extended SOFT CUBE: A Multi-Domain Scenario-Based Synthesis Framework for City-Scale High-Resolution Urban Wind and Temperature Fields |
 | Developers | Jang-Woon Wang and Jae-Jin Kim |
-| Contact | [jwwang@pukyong.ac.kr](mailto:jwwang@pukyong.ac.kr) |
+| Contact | jwwang@pukyong.ac.kr and jjkim@pknu.ac.kr|
 | First available | September 2026 |
 | Language | Fortran |
 | Repository | [github.com/jwwang-gif/e_SOFT-CUBE](https://github.com/jwwang-gif/e_SOFT-CUBE) |
