@@ -148,9 +148,9 @@ The complete CFD database is several terabytes in size and is hosted on an inter
 | Item | Details |
 | --- | --- |
 | Software | e_SOFT CUBE |
-| Full name | Extended Synthesis of Flows and Temperatures based on a CFD model and urban building environments |
+| Full name | Extended SOFT CUBE: A Multi-Domain Scenario-Based Synthesis Framework for City-Scale High-Resolution Urban Wind and Temperature Fields |
 | Developers | Jang-Woon Wang and Jae-Jin Kim |
 | Contact | [jwwang@pukyong.ac.kr](mailto:jwwang@pukyong.ac.kr) |
-| First available | August 2025 |
+| First available | September 2026 |
 | Language | Fortran |
-| Repository | [github.com/jwwang-gif/SOFT-CUBE](https://github.com/jwwang-gif/SOFT-CUBE) |
+| Repository | [github.com/jwwang-gif/SOFT-CUBE](https://github.com/jwwang-gif/e_SOFT-CUBE) |
