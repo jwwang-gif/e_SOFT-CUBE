@@ -1,42 +1,40 @@
 # e_SOFT CUBE
 
-**e_SOFT CUBE** is a Fortran program that reconstructs high-resolution urban wind and air-temperature fields from a pre-computed CFD database and LDAPS meteorological profiles. It is the extended-domain implementation of SOFT CUBE: sixteen local CFD domains (`D01`–`D16`) are reconstructed independently and joined into one composite field.
+**e_SOFT CUBE** is a Fortran program that reconstructs high-resolution (10-m) urban wind and air-temperature fields from a precomputed CFD database and LDAPS meteorological profiles. It is the extended-domain implementation of SOFT CUBE: sixteen local CFD domains (`D01`–`D16`) are synthesized independently and joined into one seamless composite field across a 6 km × 6 km area.
 
-The program is intended for an HPC environment containing the complete SOFT CUBE database and its preprocessed LDAPS and surface-temperature inputs. The database is not included in this repository.
+This repository provides the complete synthesis source code, configuration files, and **a minimal working sample/test dataset covering the lowest 10 vertical levels** to enable code verification and reproducible execution. To allow immediate reproduction of the manuscript findings, the sample dataset is configured for **22:00 UTC on 4 July 2021 (2021070422)**, which corresponds to the representative unstable convective case evaluated in Section 3.2 (Figs. 9–10) of the paper.
 
 ## What this program does
 
 For each target time and vertical level, `e_SOFTCUBE.f90`:
 
-1. Reads the urban geometry mask and seven reference inflow-wind profiles.
+1. Reads the urban geometry mask and reference inflow-wind profiles.
 2. Reads LDAPS `U`, `V`, and temperature profiles for each of the 16 subdomains.
-3. Converts the LDAPS wind components to wind speed and direction and converts temperature from °C to K.
-4. Reads six surface-to-air temperature ratios for each subdomain: roof, road, green area, soil, wall, and water.
-5. Selects the surrounding CFD database cases for wind speed, wind direction, and surface-temperature class.
+3. Converts the LDAPS wind components to wind speed and direction and adjusts air temperature.
+4. Reads six surface-to-air temperature ratios for each subdomain: roof, wall, road, vegetation, soil, and water.
+5. Selects surrounding CFD database scenarios for wind speed, direction, and thermal forcing classes.
 6. Interpolates the selected CFD fields and superposes the six land-cover contributions within each subdomain.
-7. Assembles `D01`–`D16` into a 4 × 4 composite grid, using 10-grid-wide linear or bilinear transition zones between neighboring domains.
-8. Writes the resulting `u`, `v`, `w`, and air-temperature values.
+7. Assembles `D01`–`D16` into a 4 × 4 composite grid using distance-weighted blending schemes across the 80-m (10-grid-wide) overlapping transition zones.
+8. Outputs the resulting synthesized `u`, `v`, `w`, and air-temperature fields.
 
 ## Implemented grid
 
-The dimensions below are taken directly from the current source code.
-
-| Component | Source-code dimensions | Role |
+| Component | Dimensions | Role |
 | --- | ---: | --- |
-| Local CFD domain | `158 × 158` allocated | Includes the `156 × 156` base grid plus boundary indexing |
-| Composite domain | `602 × 602` | Four-by-four assembly of the 16 local domains |
-| Vertical dimension | `62` levels | `kmax2`, derived from `kmax = 60` |
-| Tile core used in assembly | `148 × 148` | Non-overlap portion retained from each local domain |
-| Tile transition width | `10` grid points | Linear edge blending and bilinear corner blending |
+| Local CFD domain | `158 × 158` allocated | Includes `156 × 156` base grid (`10-m` resolution) plus boundary indexing |
+| Composite domain | `602 × 602` | Four-by-four assembly of the 16 local subdomains (`6 km × 6 km`) |
+| Vertical dimension (Sample run) | `10` levels | Provided in this repository for verification (Levels 1–10, near-surface layer) |
+| Vertical dimension (Full run) | `62` levels | Full domain configuration (`kmax2 = 62`, surface to 660 m) |
+| Tile core in assembly | `148 × 148` | Non-overlapping core area retained from each local domain |
+| Tile transition width | `10` grid points | 80-m overlapping zone: linear edge blending and bilinear corner blending |
 
-The composite layout in the program is:
+The composite layout across the target area is organized as:
 
 ```text
 D01  D02  D03  D04
 D05  D06  D07  D08
 D09  D10  D11  D12
 D13  D14  D15  D16
-```
 
 ## Reconstruction method
 
