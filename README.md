@@ -36,11 +36,9 @@ D05  D06  D07  D08
 D09  D10  D11  D12
 D13  D14  D15  D16
 
-## Reconstruction method
-
-### Meteorological interpolation
-
-The program derives wind speed and direction from each LDAPS `U`/`V` profile. At every vertical level it locates neighboring reference wind-speed and direction cases in the CFD database and combines those cases using interpolation weights. Values outside the available wind-speed range are scaled from the lowest or highest reference case.
+Reconstruction method
+Meteorological interpolation
+The program derives wind speed and direction from each LDAPS U/V profile. At every vertical level it locates neighboring reference wind-speed and direction cases in the CFD database and combines those cases using interpolation weights. Values outside the available wind-speed range are scaled from the lowest or highest reference case.
 
 ### Surface thermal response
 
@@ -55,13 +53,11 @@ For every subdomain, RSA input supplies the surface-to-air temperature ratios fo
 
 The corresponding CFD temperature-response fields are selected and interpolated by surface class. The six land-cover contributions are then combined to reconstruct the local air-temperature field.
 
-### Domain composition
+Domain composition
+Each tile contributes a 148 × 148 core. Adjacent cores are separated by 10-point (80-m) transition zones. One-dimensional linear interpolation is used along shared tile edges, while bilinear interpolation combines four neighboring tiles at transition-zone intersections. This produces the final 602 × 602 horizontal field.
 
-Each tile contributes a `148 × 148` core. Adjacent cores are separated by 10-point transition zones. One-dimensional linear interpolation is used along shared tile edges, while bilinear interpolation combines four neighboring tiles at transition-zone intersections. This produces the final `602 × 602` horizontal field.
-
-## Required data
-
-The source expects the following directory groups under the repository-local `data/` directory:
+Required data & Repository structure
+To allow reviewers and researchers to test the framework without downloading the multi-terabyte database, a standalone test dataset covering the lowest 10 vertical levels for 22:00 UTC on 4 July 2021 is provided directly under data/:
 
 | Input group | Purpose |
 | --- | --- |
@@ -132,14 +128,12 @@ using the Fortran format `4(1x,f12.6)`. For each vertical level, values are writ
 | [`e_SOFTCUBE.f90`](./e_SOFTCUBE.f90) | Main reconstruction, interpolation, tile-composition, and output program |
 | [`README.md`](./README.md) | Program description and execution requirements |
 
-## Data availability
+Data availability & Access to full database
+Sample Test Data: A working test dataset for the lowest 10 vertical levels (for 22:00 UTC 4 July 2021) is directly provided in this repository to verify code execution and algorithmic reproducibility without requiring the full database.
 
-The complete CFD database is several terabytes in size and is hosted on an internal HPC server subject to institutional security policies.
+Full Scenario Database: The complete CFD scenario database comprises 122,880 three-dimensional cases across 16 subdomains, totaling several tens of terabytes. It is securely hosted on an internal HPC server at Pukyong National University subject to institutional security protocols and data management policies.
 
-- The complete database cannot currently be hosted publicly.
-- e_SOFT CUBE requires the complete database; partial database operation is not supported.
-- This repository provides the source code and program documentation.
-- Database access may be granted through a formal data-sharing agreement, subject to institutional approval.
+Full Database Access: Due to storage, bandwidth, and security constraints, public web hosting of the complete multi-terabyte dataset is infeasible. Access to the full 62-level database for academic collaboration or comprehensive reproduction is governed by a formal institutional data-sharing agreement. Inquiries should be directed to the corresponding author.
 
 ## Software information
 
@@ -151,4 +145,4 @@ The complete CFD database is several terabytes in size and is hosted on an inter
 | Contact | [jwwang@pukyong.ac.kr](mailto:jwwang@pukyong.ac.kr) |
 | First available | September 2026 |
 | Language | Fortran |
-| Repository | [github.com/jwwang-gif/SOFT-CUBE](https://github.com/jwwang-gif/e_SOFT-CUBE) |
+| Repository | [github.com/jwwang-gif/e_SOFT-CUBE](https://github.com/jwwang-gif/e_SOFT-CUBE) |
