@@ -63,7 +63,8 @@ To allow reviewers and researchers to test the framework without downloading the
 | --- | --- |
 | `data/Input/Beaufort/Inflow_01.txt`–`Inflow_08.txt` | Reference inflow wind-speed profiles |
 | `data/Input/RSA/01`–`16` | Time-dependent surface-to-air ratios for the 16 domains |
-| `data/Input/ML_LDAPS_Profile/01`–`16` | Time-dependent LDAPS `U`, `V`, and temperature profiles |
+| `data/Input/LDAPS/01`–`16` | Time-dependent LDAPS `U`, `V`, and temperature profiles |
+| `data/Input/Emulator/01`–`16` | Time-dependent 'Mr' and 'cT' |
 | `data/DB/Layer/D01`–`D16` | CFD fields organized by land-cover class, wind-speed case, level, and direction |
 
 CFD database records contain eight real values per horizontal cell. The current code reads the wind components and thermal quantities used in reconstruction from these records. Output records contain four values per cell.
