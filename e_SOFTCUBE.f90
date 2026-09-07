@@ -491,6 +491,7 @@ PROGRAM E_SOFTCUBE
       real,dimension(kmax2) :: ldaps_t9, ldaps_t10, ldaps_t11, ldaps_t12, ldaps_t13, ldaps_t14, ldaps_t15, ldaps_t16
       real,dimension(kmax2) :: ldaps_tt1, ldaps_tt2, ldaps_tt3, ldaps_tt4, ldaps_tt5, ldaps_tt6, ldaps_tt7, ldaps_tt8
       real,dimension(kmax2) :: ldaps_tt9, ldaps_tt10, ldaps_tt11, ldaps_tt12, ldaps_tt13, ldaps_tt14, ldaps_tt15, ldaps_tt16
+      real,dimension(kmax2,16) :: emulator_ct, emulator_mr
       real,dimension(kmax2) :: dt1, dt2, dt3, dt4, dt5, dt6, dt7, dt8, dt9, dt10, dt11, dt12, dt13, dt14, dt15, dt16
 
       real,dimension(kmax2) ::ldaps_ws1, ldaps_dir1, inws1_1, inws1_2, dir1
@@ -832,6 +833,10 @@ PROGRAM E_SOFTCUBE
       CHARACTER(999) :: l_in_t1, l_in_t2, l_in_t3, l_in_t4, l_in_t5, l_in_t6, l_in_t7, l_in_t8
       CHARACTER(999) :: l_in_t9, l_in_t10, l_in_t11, l_in_t12, l_in_t13, l_in_t14, l_in_t15, l_in_t16
 
+      !ML emulator profiles
+      CHARACTER(999) :: emulator_ct_file, emulator_mr_file
+      INTEGER :: emulator_domain
+
       !RSA
       CHARACTER(999) :: l_in_f1, l_in_f2, l_in_f3, l_in_f4, l_in_f5, l_in_f6, l_in_f7, l_in_f8
       CHARACTER(999) :: l_in_f9, l_in_f10, l_in_f11, l_in_f12, l_in_f13, l_in_f14, l_in_f15, l_in_f16
@@ -863,6 +868,29 @@ PROGRAM E_SOFTCUBE
       END IF
 
       WRITE(*,'(A,1X,A)') 'e_SOFT CUBE target:', datetime_arg
+
+!c############################################################################
+!c ML emulator profiles: cT for temperature and Mr for momentum
+!c############################################################################
+      DO emulator_domain = 1, 16
+        WRITE(emulator_ct_file, &
+             '(A,I2.2,A,I4.4,I2.2,I2.2,I2.2,A)') &
+             './data/Input/Emulator/', emulator_domain, '/cT_', &
+             sc_yy, sc_mm, sc_dd, sc_hh, '.txt'
+        WRITE(emulator_mr_file, &
+             '(A,I2.2,A,I4.4,I2.2,I2.2,I2.2,A)') &
+             './data/Input/Emulator/', emulator_domain, '/Mr_', &
+             sc_yy, sc_mm, sc_dd, sc_hh, '.txt'
+
+        OPEN(101, file=emulator_ct_file, status='old')
+        OPEN(102, file=emulator_mr_file, status='old')
+        DO k = 1, kmax2
+          READ(101,*) emulator_ct(k,emulator_domain)
+          READ(102,*) emulator_mr(k,emulator_domain)
+        END DO
+        CLOSE(101)
+        CLOSE(102)
+      END DO
 
 !c#########################################################################
 open(11,file='./data/Input/Beaufort/Inflow_01.txt',status='old')
@@ -4650,54 +4678,54 @@ open(18,file='./data/Input/Beaufort/Inflow_08.txt',status='old')
 
 !!!!!!!!!!!!!!!!!!!! LDAPS Profile (Etas)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-     WRITE(l_in_u1,777) './data/Input/ML_LDAPS/01/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v1,777) './data/Input/ML_LDAPS/01/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t1,777) './data/Input/ML_LDAPS/01/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u2,777) './data/Input/ML_LDAPS/02/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v2,777) './data/Input/ML_LDAPS/02/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t2,777) './data/Input/ML_LDAPS/02/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u3,777) './data/Input/ML_LDAPS/03/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v3,777) './data/Input/ML_LDAPS/03/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t3,777) './data/Input/ML_LDAPS/03/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u4,777) './data/Input/ML_LDAPS/04/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v4,777) './data/Input/ML_LDAPS/04/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t4,777) './data/Input/ML_LDAPS/04/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u5,777) './data/Input/ML_LDAPS/05/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v5,777) './data/Input/ML_LDAPS/05/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t5,777) './data/Input/ML_LDAPS/05/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u6,777) './data/Input/ML_LDAPS/06/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v6,777) './data/Input/ML_LDAPS/06/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t6,777) './data/Input/ML_LDAPS/06/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u7,777) './data/Input/ML_LDAPS/07/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v7,777) './data/Input/ML_LDAPS/07/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t7,777) './data/Input/ML_LDAPS/07/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u8,777) './data/Input/ML_LDAPS/08/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v8,777) './data/Input/ML_LDAPS/08/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t8,777) './data/Input/ML_LDAPS/08/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u9,777) './data/Input/ML_LDAPS/09/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v9,777) './data/Input/ML_LDAPS/09/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t9,777) './data/Input/ML_LDAPS/09/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u10,777) './data/Input/ML_LDAPS/10/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v10,777) './data/Input/ML_LDAPS/10/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t10,777) './data/Input/ML_LDAPS/10/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u11,777) './data/Input/ML_LDAPS/11/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v11,777) './data/Input/ML_LDAPS/11/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t11,777) './data/Input/ML_LDAPS/11/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u12,777) './data/Input/ML_LDAPS/12/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v12,777) './data/Input/ML_LDAPS/12/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t12,777) './data/Input/ML_LDAPS/12/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u13,777) './data/Input/ML_LDAPS/13/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v13,777) './data/Input/ML_LDAPS/13/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t13,777) './data/Input/ML_LDAPS/13/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u14,777) './data/Input/ML_LDAPS/14/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v14,777) './data/Input/ML_LDAPS/14/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t14,777) './data/Input/ML_LDAPS/14/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u15,777) './data/Input/ML_LDAPS/15/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v15,777) './data/Input/ML_LDAPS/15/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t15,777) './data/Input/ML_LDAPS/15/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_u16,777) './data/Input/ML_LDAPS/16/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_v16,777) './data/Input/ML_LDAPS/16/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
-     WRITE(l_in_t16,777) './data/Input/ML_LDAPS/16/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u1,777) './data/Input/LDAPS/01/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v1,777) './data/Input/LDAPS/01/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t1,777) './data/Input/LDAPS/01/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u2,777) './data/Input/LDAPS/02/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v2,777) './data/Input/LDAPS/02/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t2,777) './data/Input/LDAPS/02/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u3,777) './data/Input/LDAPS/03/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v3,777) './data/Input/LDAPS/03/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t3,777) './data/Input/LDAPS/03/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u4,777) './data/Input/LDAPS/04/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v4,777) './data/Input/LDAPS/04/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t4,777) './data/Input/LDAPS/04/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u5,777) './data/Input/LDAPS/05/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v5,777) './data/Input/LDAPS/05/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t5,777) './data/Input/LDAPS/05/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u6,777) './data/Input/LDAPS/06/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v6,777) './data/Input/LDAPS/06/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t6,777) './data/Input/LDAPS/06/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u7,777) './data/Input/LDAPS/07/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v7,777) './data/Input/LDAPS/07/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t7,777) './data/Input/LDAPS/07/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u8,777) './data/Input/LDAPS/08/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v8,777) './data/Input/LDAPS/08/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t8,777) './data/Input/LDAPS/08/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u9,777) './data/Input/LDAPS/09/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v9,777) './data/Input/LDAPS/09/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t9,777) './data/Input/LDAPS/09/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u10,777) './data/Input/LDAPS/10/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v10,777) './data/Input/LDAPS/10/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t10,777) './data/Input/LDAPS/10/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u11,777) './data/Input/LDAPS/11/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v11,777) './data/Input/LDAPS/11/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t11,777) './data/Input/LDAPS/11/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u12,777) './data/Input/LDAPS/12/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v12,777) './data/Input/LDAPS/12/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t12,777) './data/Input/LDAPS/12/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u13,777) './data/Input/LDAPS/13/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v13,777) './data/Input/LDAPS/13/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t13,777) './data/Input/LDAPS/13/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u14,777) './data/Input/LDAPS/14/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v14,777) './data/Input/LDAPS/14/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t14,777) './data/Input/LDAPS/14/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u15,777) './data/Input/LDAPS/15/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v15,777) './data/Input/LDAPS/15/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t15,777) './data/Input/LDAPS/15/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_u16,777) './data/Input/LDAPS/16/U_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_v16,777) './data/Input/LDAPS/16/V_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
+     WRITE(l_in_t16,777) './data/Input/LDAPS/16/T_',sc_yy,sc_mm,sc_dd,sc_hh,'.txt'
 
      OPEN(41, file=l_in_u1,status='old')
      OPEN(42, file=l_in_u2,status='old')
@@ -17462,6 +17490,72 @@ open(18,file='./data/Input/Beaufort/Inflow_08.txt',status='old')
       vv16(i,j) = (v161(i,j) + v162(i,j) + v163(i,j) + v164(i,j) + v165(i,j) + v166(i,j))/6.
       ww16(i,j) = (w161(i,j) + w162(i,j) + w163(i,j) + w164(i,j) + w165(i,j) + w166(i,j))/6.
       ftemp16(i,j) = ((ldaps_t16(kk)) * (rtemp161(i,j) + rtemp162(i,j) + rtemp163(i,j) + rtemp164(i,j) + rtemp165(i,j) + rtemp166(i,j) - 5. ))  ! Unit : K
+
+!c Apply the domain- and layer-specific ML emulator corrections (Methods 4-6).
+      uu1(i,j) = emulator_mr(kk,1) * uu1(i,j)
+      vv1(i,j) = emulator_mr(kk,1) * vv1(i,j)
+      ww1(i,j) = emulator_mr(kk,1) * ww1(i,j)
+      ftemp1(i,j) = emulator_ct(kk,1) * ftemp1(i,j)
+      uu2(i,j) = emulator_mr(kk,2) * uu2(i,j)
+      vv2(i,j) = emulator_mr(kk,2) * vv2(i,j)
+      ww2(i,j) = emulator_mr(kk,2) * ww2(i,j)
+      ftemp2(i,j) = emulator_ct(kk,2) * ftemp2(i,j)
+      uu3(i,j) = emulator_mr(kk,3) * uu3(i,j)
+      vv3(i,j) = emulator_mr(kk,3) * vv3(i,j)
+      ww3(i,j) = emulator_mr(kk,3) * ww3(i,j)
+      ftemp3(i,j) = emulator_ct(kk,3) * ftemp3(i,j)
+      uu4(i,j) = emulator_mr(kk,4) * uu4(i,j)
+      vv4(i,j) = emulator_mr(kk,4) * vv4(i,j)
+      ww4(i,j) = emulator_mr(kk,4) * ww4(i,j)
+      ftemp4(i,j) = emulator_ct(kk,4) * ftemp4(i,j)
+      uu5(i,j) = emulator_mr(kk,5) * uu5(i,j)
+      vv5(i,j) = emulator_mr(kk,5) * vv5(i,j)
+      ww5(i,j) = emulator_mr(kk,5) * ww5(i,j)
+      ftemp5(i,j) = emulator_ct(kk,5) * ftemp5(i,j)
+      uu6(i,j) = emulator_mr(kk,6) * uu6(i,j)
+      vv6(i,j) = emulator_mr(kk,6) * vv6(i,j)
+      ww6(i,j) = emulator_mr(kk,6) * ww6(i,j)
+      ftemp6(i,j) = emulator_ct(kk,6) * ftemp6(i,j)
+      uu7(i,j) = emulator_mr(kk,7) * uu7(i,j)
+      vv7(i,j) = emulator_mr(kk,7) * vv7(i,j)
+      ww7(i,j) = emulator_mr(kk,7) * ww7(i,j)
+      ftemp7(i,j) = emulator_ct(kk,7) * ftemp7(i,j)
+      uu8(i,j) = emulator_mr(kk,8) * uu8(i,j)
+      vv8(i,j) = emulator_mr(kk,8) * vv8(i,j)
+      ww8(i,j) = emulator_mr(kk,8) * ww8(i,j)
+      ftemp8(i,j) = emulator_ct(kk,8) * ftemp8(i,j)
+      uu9(i,j) = emulator_mr(kk,9) * uu9(i,j)
+      vv9(i,j) = emulator_mr(kk,9) * vv9(i,j)
+      ww9(i,j) = emulator_mr(kk,9) * ww9(i,j)
+      ftemp9(i,j) = emulator_ct(kk,9) * ftemp9(i,j)
+      uu10(i,j) = emulator_mr(kk,10) * uu10(i,j)
+      vv10(i,j) = emulator_mr(kk,10) * vv10(i,j)
+      ww10(i,j) = emulator_mr(kk,10) * ww10(i,j)
+      ftemp10(i,j) = emulator_ct(kk,10) * ftemp10(i,j)
+      uu11(i,j) = emulator_mr(kk,11) * uu11(i,j)
+      vv11(i,j) = emulator_mr(kk,11) * vv11(i,j)
+      ww11(i,j) = emulator_mr(kk,11) * ww11(i,j)
+      ftemp11(i,j) = emulator_ct(kk,11) * ftemp11(i,j)
+      uu12(i,j) = emulator_mr(kk,12) * uu12(i,j)
+      vv12(i,j) = emulator_mr(kk,12) * vv12(i,j)
+      ww12(i,j) = emulator_mr(kk,12) * ww12(i,j)
+      ftemp12(i,j) = emulator_ct(kk,12) * ftemp12(i,j)
+      uu13(i,j) = emulator_mr(kk,13) * uu13(i,j)
+      vv13(i,j) = emulator_mr(kk,13) * vv13(i,j)
+      ww13(i,j) = emulator_mr(kk,13) * ww13(i,j)
+      ftemp13(i,j) = emulator_ct(kk,13) * ftemp13(i,j)
+      uu14(i,j) = emulator_mr(kk,14) * uu14(i,j)
+      vv14(i,j) = emulator_mr(kk,14) * vv14(i,j)
+      ww14(i,j) = emulator_mr(kk,14) * ww14(i,j)
+      ftemp14(i,j) = emulator_ct(kk,14) * ftemp14(i,j)
+      uu15(i,j) = emulator_mr(kk,15) * uu15(i,j)
+      vv15(i,j) = emulator_mr(kk,15) * vv15(i,j)
+      ww15(i,j) = emulator_mr(kk,15) * ww15(i,j)
+      ftemp15(i,j) = emulator_ct(kk,15) * ftemp15(i,j)
+      uu16(i,j) = emulator_mr(kk,16) * uu16(i,j)
+      vv16(i,j) = emulator_mr(kk,16) * vv16(i,j)
+      ww16(i,j) = emulator_mr(kk,16) * ww16(i,j)
+      ftemp16(i,j) = emulator_ct(kk,16) * ftemp16(i,j)
 
       ENDDO
       ENDDO
